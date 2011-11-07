@@ -321,9 +321,10 @@ exports.resizeArgs = function(options) {
     srcData: null,
     srcFormat: null,
     dstPath: null,
-    quality: 0.8,
+    quality: 1.0,
     format: 'jpg',
     progressive: false,
+    interlace: false,
     colorspace: null,
     width: 0,
     height: 0,
@@ -353,6 +354,7 @@ exports.resizeArgs = function(options) {
 
   // build args
   var args = [opt.srcPath];
+  args.push('-flatten');
   if (opt.sharpening > 0) {
     args = args.concat([
       '-set', 'option:filter:blur', String(1.0-opt.sharpening)]);
@@ -375,6 +377,10 @@ exports.resizeArgs = function(options) {
   if (isJPEG && opt.progressive) {
     args.push('-interlace');
     args.push('plane');
+  }
+  if (isJPEG && opt.interlace) {
+      args.push('-interlace');
+      args.push('line');
   }
   if (isJPEG || opt.format === 'png') {
     args.push('-quality');
